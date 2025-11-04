@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme using MaterialComponents Light -->
+    <style name="Theme.TicTacToe" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondary</item>
+
+        <!-- Surfaces and backgrounds -->
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorBackground">@color/colorBackground</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+
+        <!-- Error/Success -->
+        <item name="colorError">@color/colorError</item>
+
+        <!-- Ripple/interactive feedback -->
+        <item name="android:colorControlHighlight">?attr/colorSecondary</item>
+
+        <!-- Button styles can be customized later as needed -->
+    </style>
+</resources>

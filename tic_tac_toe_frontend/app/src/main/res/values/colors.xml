@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App color palette -->
+    <color name="colorPrimary">#3b82f6</color>
+    <color name="colorSecondary">#64748b</color>
+    <color name="colorSuccess">#06b6d4</color>
+    <color name="colorError">#EF4444</color>
+    <color name="colorBackground">#f9fafb</color>
+    <color name="colorSurface">#ffffff</color>
+    <color name="colorOnSurface">#111827</color>
+
+    <!-- Convenience aliases for Material attributes -->
+    <color name="mdc_colorPrimary">@color/colorPrimary</color>
+    <color name="mdc_colorSecondary">@color/colorSecondary</color>
+    <color name="mdc_colorError">@color/colorError</color>
+    <color name="mdc_colorBackground">@color/colorBackground</color>
+    <color name="mdc_colorSurface">@color/colorSurface</color>
+    <color name="mdc_colorOnSurface">@color/colorOnSurface</color>
+
+    <!-- Stroke color with subtle alpha for borders -->
+    <color name="cellStroke">@color/colorSecondary</color>
+</resources>
