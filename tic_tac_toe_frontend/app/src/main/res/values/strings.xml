@@ -3,13 +3,13 @@
     <string name="app_name">Tic Tac Toe</string>
 
     <!-- Turn templates -->
-    <string name="turn_x">X's turn</string>
-    <string name="turn_o">O's turn</string>
+    <string name="turn_x">X\'s turn</string>
+    <string name="turn_o">O\'s turn</string>
 
     <!-- Result messages -->
     <string name="x_wins">X wins!</string>
     <string name="o_wins">O wins!</string>
-    <string name="draw">It's a draw!</string>
+    <string name="draw">It\'s a draw!</string>
 
     <!-- Actions -->
     <string name="reset">Reset</string>

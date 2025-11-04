@@ -4,5 +4,6 @@ androidApplication {
     dependencies {
         implementation("org.apache.commons:commons-text:1.11.0")
         implementation(project(":utilities"))
+        implementation("com.google.android.material:material:1.11.0")
     }
 }
