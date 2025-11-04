@@ -1,0 +1,6 @@
+/*
+ This file exists to help tools that expect a traditional Gradle settings file.
+ The project actually uses Declarative Gradle (settings.gradle.dcl).
+ We include a minimal hint and keep names consistent.
+*/
+rootProject.name = "example-android-app"

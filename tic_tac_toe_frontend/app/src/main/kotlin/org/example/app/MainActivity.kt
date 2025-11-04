@@ -2,14 +2,23 @@ package org.example.app
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-
 import org.example.app.logic.GameLogic
 import org.example.app.model.GameState
 import org.example.app.model.Player
 
+/**
+ * MainActivity wires the UI to the core Tic Tac Toe game logic.
+ *
+ * Responsibilities:
+ * - Bind views and set up click listeners for the 3x3 grid and Reset button.
+ * - Delegate moves to GameLogic ensuring only valid moves while game is ongoing.
+ * - Render current player, board, and terminal states (win/draw).
+ * - Persist and restore full game state across configuration changes (e.g., rotation).
+ */
 class MainActivity : Activity() {
 
     private lateinit var tvTurn: TextView
@@ -36,7 +45,80 @@ class MainActivity : Activity() {
         wireCellClicks()
         btnReset.setOnClickListener { resetGame() }
 
+        // Restore any saved state first, then render
+        restoreFromBundle(savedInstanceState)
         render()
+    }
+
+    /**
+     * Restores game state from the savedInstanceState bundle (if provided).
+     * We serialize a 3x3 board into a flat IntArray of length 9:
+     * - 0 = empty, 1 = X, 2 = O
+     * Also store current player, winner and draw flags.
+     */
+    private fun restoreFromBundle(bundle: Bundle?) {
+        if (bundle == null) return
+
+        val boardArray = bundle.getIntArray(KEY_BOARD) ?: return
+        if (boardArray.size != 9) return
+
+        // Reset board and fill from array
+        state = GameLogic.reset(state)
+        var idx = 0
+        for (r in 0..2) {
+            for (c in 0..2) {
+                when (boardArray[idx++]) {
+                    1 -> state.board.place(r, c, Player.X)
+                    2 -> state.board.place(r, c, Player.O)
+                }
+            }
+        }
+
+        val currentPlayerOrdinal = bundle.getInt(KEY_CURRENT_PLAYER, 0)
+        val current = if (currentPlayerOrdinal == 1) Player.O else Player.X
+
+        val winnerVal = bundle.getInt(KEY_WINNER, 0)
+        val winner: Player? = when (winnerVal) {
+            1 -> Player.X
+            2 -> Player.O
+            else -> null
+        }
+
+        val isDraw = bundle.getBoolean(KEY_IS_DRAW, false)
+
+        // Apply reconstructed state
+        state = GameState(
+            board = state.board,
+            currentPlayer = current,
+            winner = winner,
+            isDraw = isDraw
+        )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Serialize the 3x3 board and state metadata
+        val boardArray = IntArray(9)
+        var idx = 0
+        for (r in 0..2) {
+            for (c in 0..2) {
+                boardArray[idx++] = when (state.board.get(r, c)) {
+                    Player.X -> 1
+                    Player.O -> 2
+                    null -> 0
+                }
+            }
+        }
+
+        outState.putIntArray(KEY_BOARD, boardArray)
+        outState.putInt(KEY_CURRENT_PLAYER, if (state.currentPlayer == Player.O) 1 else 0)
+        val winnerVal = when (state.winner) {
+            Player.X -> 1
+            Player.O -> 2
+            null -> 0
+        }
+        outState.putInt(KEY_WINNER, winnerVal)
+        outState.putBoolean(KEY_IS_DRAW, state.isDraw)
     }
 
     private fun wireCellClicks() {
@@ -50,7 +132,9 @@ class MainActivity : Activity() {
     }
 
     private fun onCellClicked(row: Int, col: Int) {
+        // Only allow moves while game is ongoing and target cell is empty
         if (state.winner != null || state.isDraw) return
+        if (state.board.get(row, col) != null) return
 
         val player = state.currentPlayer
         val newState = GameLogic.makeMove(state, row, col, player)
@@ -64,7 +148,7 @@ class MainActivity : Activity() {
 
     private fun resetGame() {
         state = GameLogic.reset(state)
-        // Clear button labels
+        // Clear button labels and enable all
         for (r in 0..2) {
             for (c in 0..2) {
                 buttons[r][c].text = ""
@@ -74,6 +158,12 @@ class MainActivity : Activity() {
         render()
     }
 
+    /**
+     * Updates the UI to reflect the current state:
+     * - Sets texts for each cell (X/O/empty)
+     * - Enables/disables cells based on occupancy and terminal states
+     * - Shows current turn or result message
+     */
     private fun render() {
         // Update board visuals
         for (r in 0..2) {
@@ -104,5 +194,12 @@ class MainActivity : Activity() {
             tvResult.text = ""
             tvTurn.text = if (state.currentPlayer == Player.X) getString(R.string.turn_x) else getString(R.string.turn_o)
         }
+    }
+
+    companion object {
+        private const val KEY_BOARD = "board_3x3"
+        private const val KEY_CURRENT_PLAYER = "current_player"
+        private const val KEY_WINNER = "winner"
+        private const val KEY_IS_DRAW = "is_draw"
     }
 }

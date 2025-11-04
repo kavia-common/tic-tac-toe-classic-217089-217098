@@ -1,0 +1,4 @@
+buildscript {
+    // Placeholder for tools that require presence of build.gradle at project root.
+    // Real configuration uses Declarative Gradle (settings.gradle.dcl, build.gradle.dcl).
+}
