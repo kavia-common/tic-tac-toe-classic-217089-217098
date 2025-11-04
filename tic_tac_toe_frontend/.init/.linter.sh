@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Root-level linter shim: use the provided helper script to run module lint.
+# This project uses Declarative Gradle (.dcl), so root 'lint' may not exist.
 
-# This script is invoked by CI to run lint. Some CI environments expect a root-level "lint" task.
-# Our project primarily uses Declarative Gradle (.dcl), which may not expose a root lint task.
-# We forward the lint command to the app module instead.
+# Project root for this container is the parent of this .init directory
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+# Ensure scripts are executable
+chmod +x "${PROJECT_ROOT}/gradlew-lint.sh" || true
+chmod +x "${PROJECT_ROOT}/gradlew" || true
 
-# Ensure gradlew is executable
-chmod +x "${DIR}/gradlew" || true
-
-# Prefer module lint task
-exec "${DIR}/gradlew" :app:lint
+# Delegate to the helper which forwards to :app:lint
+exec "${PROJECT_ROOT}/gradlew-lint.sh"

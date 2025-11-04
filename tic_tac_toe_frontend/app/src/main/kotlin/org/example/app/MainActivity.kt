@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.GridLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import org.example.app.logic.GameLogic
@@ -21,9 +22,19 @@ import org.example.app.model.Player
  */
 class MainActivity : Activity() {
 
+    // Header: shows whose turn it is
     private lateinit var tvTurn: TextView
+
+    // Result message area
     private lateinit var tvResult: TextView
+
+    // Grid container (not strictly needed but useful to have reference)
+    private lateinit var gridBoard: GridLayout
+
+    // 3x3 board buttons
     private lateinit var buttons: Array<Array<Button>>
+
+    // Reset button
     private lateinit var btnReset: Button
 
     // Backing game state
@@ -33,23 +44,24 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Bind views
+        // Bind views by ID from activity_main.xml
         tvTurn = findViewById(R.id.tvTurn)
         tvResult = findViewById(R.id.tvResult)
+        gridBoard = findViewById(R.id.gridBoard)
         btnReset = findViewById(R.id.btnReset)
 
-        // Bind board buttons (IDs must match activity_main.xml)
+        // Bind 9 cell buttons
         buttons = arrayOf(
             arrayOf(findViewById(R.id.btnCell_0_0), findViewById(R.id.btnCell_0_1), findViewById(R.id.btnCell_0_2)),
             arrayOf(findViewById(R.id.btnCell_1_0), findViewById(R.id.btnCell_1_1), findViewById(R.id.btnCell_1_2)),
             arrayOf(findViewById(R.id.btnCell_2_0), findViewById(R.id.btnCell_2_1), findViewById(R.id.btnCell_2_2))
         )
 
-        // Wire interactions
+        // Set click listeners for cells and reset
         wireCellClicks()
         btnReset.setOnClickListener { resetGame() }
 
-        // Restore state if available, then render
+        // Restore state if available, then render UI
         restoreFromBundle(savedInstanceState)
         render()
     }
@@ -139,6 +151,7 @@ class MainActivity : Activity() {
         if (state.winner != null || state.isDraw) return
         if (state.board.get(row, col) != null) return
 
+        // Delegate to game logic
         val player = state.currentPlayer
         val newState = GameLogic.makeMove(state, row, col, player)
 
@@ -191,18 +204,22 @@ class MainActivity : Activity() {
             tvResult.text = if (state.winner == Player.X) getString(R.string.x_wins) else getString(R.string.o_wins)
             tvResult.setTextColor(ContextCompat.getColor(this, R.color.colorSuccess))
             tvTurn.text = "" // Clear turn text on game end
+            tvTurn.setTextColor(ContextCompat.getColor(this, R.color.colorOnSurface))
             disableBoard()
         } else if (state.isDraw) {
             tvResult.visibility = View.VISIBLE
             tvResult.text = getString(R.string.draw)
             tvResult.setTextColor(ContextCompat.getColor(this, R.color.colorSecondary))
             tvTurn.text = ""
+            tvTurn.setTextColor(ContextCompat.getColor(this, R.color.colorOnSurface))
             disableBoard()
         } else {
             tvResult.visibility = View.GONE
             tvResult.text = ""
             tvTurn.text = if (state.currentPlayer == Player.X) getString(R.string.turn_x) else getString(R.string.turn_o)
             tvTurn.setTextColor(ContextCompat.getColor(this, R.color.colorOnSurface))
+            // Ensure grid is enabled for available moves
+            enableBoardForAvailableMoves()
         }
     }
 
@@ -210,6 +227,15 @@ class MainActivity : Activity() {
         for (r in 0..2) {
             for (c in 0..2) {
                 buttons[r][c].isEnabled = false
+            }
+        }
+    }
+
+    private fun enableBoardForAvailableMoves() {
+        for (r in 0..2) {
+            for (c in 0..2) {
+                val cell = state.board.get(r, c)
+                buttons[r][c].isEnabled = cell == null
             }
         }
     }
