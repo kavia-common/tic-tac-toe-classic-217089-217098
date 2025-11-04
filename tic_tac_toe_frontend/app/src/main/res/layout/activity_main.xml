@@ -1,12 +1,204 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <!-- Header: Current turn -->
     <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
-</RelativeLayout>
+        android:id="@+id/tvTurn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/turn_x"
+        android:textAlignment="center"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Spacer -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
+    <!-- 3x3 Grid for Tic Tac Toe board -->
+    <GridLayout
+        android:id="@+id/gridBoard"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:useDefaultMargins="true"
+        android:padding="8dp">
+
+        <!-- Row 0 -->
+        <Button
+            android:id="@+id/btnCell_0_0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCell_0_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCell_0_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="2"
+            android:layout_row="0"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <!-- Row 1 -->
+        <Button
+            android:id="@+id/btnCell_1_0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCell_1_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCell_1_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <!-- Row 2 -->
+        <Button
+            android:id="@+id/btnCell_2_0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCell_2_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnCell_2_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:background="@drawable/bg_cell_selector"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="24sp" />
+    </GridLayout>
+
+    <!-- Result message (hidden initially) -->
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:text="@string/x_wins" />
+
+    <!-- Spacer -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
+    <!-- Reset button -->
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="@string/reset"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp" />
+
+</LinearLayout>
