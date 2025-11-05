@@ -2,8 +2,8 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /*
- This Kotlin build script exists solely to provide a root-level 'lint' task for CI tools
- that expect it. The actual project config uses Declarative Gradle (.dcl files).
+ This Kotlin build script exists to provide root-level CI-friendly tasks for tools
+ that expect them. The actual project config uses Declarative Gradle (.dcl files).
 */
 
 open class LintForwardTask : DefaultTask() {
@@ -19,8 +19,25 @@ open class LintForwardTask : DefaultTask() {
 }
 
 tasks.register<LintForwardTask>("lint") {
-    // Ensure Gradle executes :app:lint when 'lint' is invoked at root
-    dependsOn(gradle.includedBuilds.flatMap { it.task(":app:lint") })
-    // Fallback: if not using composite builds, depend on module task directly
+    // Fallback: depend on module task directly
     dependsOn(":app:lint")
+}
+
+/**
+ * Root-level 'check' task forwarding to ':app:check' so CI can run 'gradle check'.
+ */
+open class CheckForwardTask : DefaultTask() {
+    init {
+        group = "verification"
+        description = "Forwards check to :app:check"
+    }
+
+    @TaskAction
+    fun forward() {
+        // No-op; the dependency does the actual work.
+    }
+}
+
+tasks.register<CheckForwardTask>("check") {
+    dependsOn(":app:check")
 }
