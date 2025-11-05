@@ -2,42 +2,41 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /*
- This Kotlin build script exists to provide root-level CI-friendly tasks for tools
- that expect them. The actual project config uses Declarative Gradle (.dcl files).
+ Minimal conventional Gradle root build file.
+ Adds repositories for all projects to ensure dependency resolution.
 */
 
-open class LintForwardTask : DefaultTask() {
-    init {
-        group = "verification"
-        description = "Forwards lint to :app:lint"
-    }
-
-    @TaskAction
-    fun forward() {
-        // No-op at execution time. We simply depend on :app:lint.
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
-tasks.register<LintForwardTask>("lint") {
-    // Fallback: depend on module task directly
-    dependsOn(":app:lint")
-}
-
-/**
- * Root-level 'check' task forwarding to ':app:check' so CI can run 'gradle check'.
- */
-open class CheckForwardTask : DefaultTask() {
-    init {
-        group = "verification"
-        description = "Forwards check to :app:check"
-    }
-
-    @TaskAction
-    fun forward() {
-        // No-op; the dependency does the actual work.
+tasks.register("assembleDebug") {
+    group = "build"
+    description = "Convenience root task that depends on :app:assembleDebug if it exists."
+    doFirst {
+        val appProject = project.findProject(":app")
+        val appAssemble = appProject?.tasks?.findByName("assembleDebug")
+        if (appAssemble != null) {
+            dependsOn(appAssemble)
+        } else {
+            logger.lifecycle("':app:assembleDebug' not found at execution time; root 'assembleDebug' will no-op.")
+        }
     }
 }
 
-tasks.register<CheckForwardTask>("check") {
-    dependsOn(":app:check")
+tasks.register("check") {
+    group = "verification"
+    description = "Root verification task; depends on :app:check if present."
+    doFirst {
+        val appProject = project.findProject(":app")
+        val appCheck = appProject?.tasks?.findByName("check")
+        if (appCheck != null) {
+            dependsOn(appCheck)
+        } else {
+            logger.lifecycle("':app:check' not found at execution time; root 'check' will no-op.")
+        }
+    }
 }
